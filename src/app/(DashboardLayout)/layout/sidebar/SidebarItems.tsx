@@ -1,32 +1,32 @@
 import React from "react";
 import Menuitems from "./MenuItems";
 import { usePathname } from "next/navigation";
-import { Box, List } from "@mui/material";
+import { Box, List, Tooltip } from "@mui/material";
 import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
 
-const SidebarItems = ({ toggleMobileSidebar }: any) => {
+const SidebarItems = ({ toggleMobileSidebar, collapsed }: any) => {
   const pathname = usePathname();
   const pathDirect = pathname;
-  
+
   return (
-    <Box sx={{ px: 3 }}>
+    <Box sx={{ px: collapsed ? 1 : 3 }}>
       <List sx={{ pt: 0 }} className="sidebarNav" component="div">
         {Menuitems.map((item) => {
-          // {/********SubHeader**********/}
           if (item.subheader) {
-            return <NavGroup item={item} key={item.subheader} />;
-
-            // {/********If Sub Menu**********/}
-            /* eslint no-else-return: "off" */
+            return !collapsed && <NavGroup item={item} key={item.subheader} />;
           } else {
             return (
-              <NavItem
-                item={item}
-                key={item.id}
-                pathDirect={pathDirect}
-                onClick={toggleMobileSidebar}
-              />
+              <Tooltip title={collapsed ? item.title : ''} placement="right" arrow key={item.id}>
+                <Box>
+                  <NavItem
+                    item={item}
+                    pathDirect={pathDirect}
+                    onClick={toggleMobileSidebar}
+                    collapsed={collapsed}
+                  />
+                </Box>
+              </Tooltip>
             );
           }
         })}
@@ -34,4 +34,5 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
     </Box>
   );
 };
+
 export default SidebarItems;

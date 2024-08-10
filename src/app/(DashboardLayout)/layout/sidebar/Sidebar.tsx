@@ -1,7 +1,9 @@
-import { useMediaQuery, Box, Drawer } from "@mui/material";
+import React, { useState } from "react";
+import { useMediaQuery, Box, Drawer, IconButton } from "@mui/material";
 import Logo from "../shared/logo/Logo";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Updrade";
+import MenuIcon from '@mui/icons-material/Menu';
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -14,9 +16,14 @@ const Sidebar = ({
   onSidebarClose,
   isSidebarOpen,
 }: ItemType) => {
+  const [collapsed, setCollapsed] = useState(false);
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
-  const sidebarWidth = "270px";
+  const handleToggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const sidebarWidth = collapsed ? "58px" : "270px";
 
   if (lgUp) {
     return (
@@ -24,11 +31,9 @@ const Sidebar = ({
         sx={{
           width: sidebarWidth,
           flexShrink: 0,
+          transition: "width 0.3s",
         }}
       >
-        {/* ------------------------------------------- */}
-        {/* Sidebar for desktop */}
-        {/* ------------------------------------------- */}
         <Drawer
           anchor="left"
           open={isSidebarOpen}
@@ -37,30 +42,27 @@ const Sidebar = ({
             sx: {
               width: sidebarWidth,
               boxSizing: "border-box",
+              transition: "width 0.3s",
             },
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Sidebar Box */}
-          {/* ------------------------------------------- */}
           <Box
             sx={{
               height: "100%",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            {/* ------------------------------------------- */}
-            {/* Logo */}
-            {/* ------------------------------------------- */}
-            <Box px={3}>
+            <Box px={3} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Logo />
+              <IconButton onClick={handleToggleCollapse}>
+                <MenuIcon />
+              </IconButton>
             </Box>
-            <Box>
-              {/* ------------------------------------------- */}
-              {/* Sidebar Items */}
-              {/* ------------------------------------------- */}
-              <SidebarItems />
-              <Upgrade />
+            <Box flexGrow={1}>
+              <SidebarItems collapsed={collapsed} />
             </Box>
+            <Upgrade />
           </Box>
         </Drawer>
       </Box>
@@ -80,16 +82,13 @@ const Sidebar = ({
         },
       }}
     >
-      {/* ------------------------------------------- */}
-      {/* Logo */}
-      {/* ------------------------------------------- */}
-      <Box px={2}>
+      <Box px={2} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Logo />
+        <IconButton onClick={handleToggleCollapse}>
+          <MenuIcon />
+        </IconButton>
       </Box>
-      {/* ------------------------------------------- */}
-      {/* Sidebar For Mobile */}
-      {/* ------------------------------------------- */}
-      <SidebarItems />
+      <SidebarItems collapsed={collapsed} />
       <Upgrade />
     </Drawer>
   );
