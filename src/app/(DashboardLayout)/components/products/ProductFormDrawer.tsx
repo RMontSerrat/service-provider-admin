@@ -37,7 +37,8 @@ const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, on
     setValue('image', acceptedFiles[0]);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif'] },
+ });
 
   const predefinedGiftCards = [
     'https://via.placeholder.com/150x100.png?text=Gift+Card+1',
