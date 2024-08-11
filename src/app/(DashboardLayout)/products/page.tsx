@@ -7,7 +7,7 @@ import {
 } from "@tabler/icons-react";
 
 import { Button } from '@mui/material';
-import ProductFormDrawer from "../components/products/ProductFormDrawer";
+import ProductFormDrawer from "@/app/(DashboardLayout)/components/products/ProductFormDrawer";
 import { useState } from "react";
 
 

@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Drawer, Box, TextField, Button, Typography, Grid, IconButton } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { productSchema } from '@/app/schemas';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDropzone } from 'react-dropzone';
-import { Product } from './useProducts';
 
 interface ProductFormDrawerProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  initialProductData?: Product;
+  initialProductData?: {
+    name: string;
+    price: number;
+    description: string;
+    image?: string;
+    file?: File;
+  };
 }
 
 const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, onSubmit, initialProductData }) => {
-  const [selectedImage, setSelectedImage] = useState<string | File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | File | null>(initialProductData?.image || initialProductData?.file || null);
 
   const {
     register,
@@ -24,21 +29,26 @@ const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, on
     formState: { errors },
   } = useForm({
     resolver: zodResolver(productSchema),
-    defaultValues: initialProductData || {
-      name: '',
-      price: 0,
-      description: '',
-      image: '',
+    defaultValues: {
+      name: initialProductData?.name || '',
+      price: initialProductData?.price || 0,
+      description: initialProductData?.description || '',
+      image: initialProductData?.image || '',
+      file: initialProductData?.file || null,
     },
   });
 
   const onDrop = (acceptedFiles: File[]) => {
-    setSelectedImage(acceptedFiles[0]);
-    setValue('image', acceptedFiles[0]);
+    const file = acceptedFiles[0];
+    setSelectedImage(file);
+    setValue('file', file); // Set the file value
+    setValue('image', ''); // Clear the image URL
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif'] },
- });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif'] },
+  });
 
   const predefinedGiftCards = [
     'https://via.placeholder.com/150x100.png?text=Gift+Card+1',
@@ -48,7 +58,8 @@ const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, on
 
   const handleSelectGiftCard = (url: string) => {
     setSelectedImage(url);
-    setValue('image', url);
+    setValue('image', url); // Set the image URL
+    setValue('file', null); // Clear the file value
   };
 
   return (
@@ -69,9 +80,9 @@ const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, on
               label="Nome"
               fullWidth
               margin="normal"
-              {...register('nome')}
-              error={!!errors.nome}
-              helperText={errors.nome?.message}
+              {...register('name')}
+              error={!!errors.name}
+              helperText={errors.name?.message}
             />
             <TextField
               label="Preço"
@@ -113,7 +124,7 @@ const ProductFormDrawer: React.FC<ProductFormDrawerProps> = ({ open, onClose, on
                     {...getRootProps()}
                     sx={{
                       width: '100%',
-                      height: '175px',
+                      height: 'calc(100% - 10px)',
                       border: selectedImage && typeof selectedImage === 'object' ? '2px solid blue' : '2px dashed gray',
                       borderRadius: '4px',
                       padding: '8px',

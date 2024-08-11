@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 export interface Product {
   id: number;
   name: string;
-  image: string;
+  image: File;
   description: string;
   price: number;
 }
