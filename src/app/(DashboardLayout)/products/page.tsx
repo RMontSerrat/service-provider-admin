@@ -18,7 +18,7 @@ const SamplePage = () => {
     setDrawerOpen(true);
   };
 
-  const handleSubmit = (data) => {
+  const handleSubmit = () => {
     setDrawerOpen(false);
   };
 
