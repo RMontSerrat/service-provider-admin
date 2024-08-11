@@ -1,5 +1,4 @@
 'use client';
-import { useRouter } from "next/navigation";
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import ProductsList from '@/app/(DashboardLayout)/components/products/ProductsList';
@@ -9,7 +8,6 @@ import {
 
 import { Button } from '@mui/material';
 import ProductFormDrawer from "../components/products/ProductFormDrawer";
-import { Product } from "../components/products/useProducts";
 import { useState } from "react";
 
 
