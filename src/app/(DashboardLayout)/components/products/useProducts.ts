@@ -1,66 +1,110 @@
-import { useState, useEffect } from 'react';
+import useSWR, { mutate } from 'swr';
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   image: string;
   description: string;
   price: number;
+  file: File | null;
 }
 
+export interface ActionCallbacks {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+}
+
+// Simulando uma API fake com produtos mockados
+const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: 'Produto 1',
+    image: 'https://picsum.photos/seed/p1/100/100',
+    price: 29.99,
+    description: 'Descrição do Produto 1. Este é um excelente produto com alta qualidade.',
+    file: null,
+  },
+  {
+    id: "2",
+    name: 'Produto 2',
+    image: 'https://picsum.photos/seed/p2/100/100',
+    price: 49.99,
+    description: 'Descrição do Produto 2. Este produto é conhecido por sua durabilidade.',
+    file: null,
+  },
+  {
+    id: "3",
+    name: 'Produto 3',
+    image: 'https://picsum.photos/seed/p3/100/100',
+    price: 19.99,
+    description: 'Descrição do Produto 3. Um produto acessível e de boa qualidade.',
+    file: null,
+  },
+  {
+    id: "4",
+    name: 'Produto 4',
+    image: 'https://picsum.photos/seed/p4/100/100',
+    price: 99.99,
+    description: 'Descrição do Produto 4. Produto premium com as melhores características.',
+    file: null,
+  },
+];
+
+// Simula um endpoint que retorna a lista de produtos
+const fetchProducts = async (): Promise<Product[]> => {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulando um tempo de carregamento
+  return mockProducts;
+};
+
 export const useProducts = () => {
-  const [data, setData] = useState<Product[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: products, error } = useSWR<Product[]>('products', fetchProducts);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        // Simula um tempo de carregamento
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+  const isLoading = !products && !error;
 
-        // Mock data
-        const mockProducts = [
-          {
-            id: 1,
-            name: 'Produto 1',
-            image: 'https://picsum.photos/seed/p1/100/100',
-            price: 29.99,
-            description: 'Descrição do Produto 1. Este é um excelente produto com alta qualidade.',
-          },
-          {
-            id: 2,
-            name: 'Produto 2',
-            image: 'https://picsum.photos/seed/p2/100/100',
-            price: 49.99,
-            description: 'Descrição do Produto 2. Este produto é conhecido por sua durabilidade.',
-          },
-          {
-            id: 3,
-            name: 'Produto 3',
-            image: 'https://picsum.photos/seed/p3/100/100',
-            price: 19.99,
-            description: 'Descrição do Produto 3. Um produto acessível e de boa qualidade.',
-          },
-          {
-            id: 4,
-            name: 'Produto 4',
-            image: 'https://picsum.photos/seed/p4/100/100',
-            price: 99.99,
-            description: 'Descrição do Produto 4. Produto premium com as melhores características.',
-          },
-        ] as Product[];
+  const addProduct = async (newProduct: Product, callbacks?: ActionCallbacks) => {
+    const { onSuccess, onError } = callbacks || {};
+    try {
+      mockProducts.push(newProduct);
+      await mutate('products', mockProducts, false);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      if (onError) onError(error as Error);
+    }
+  };
 
-        setData(mockProducts);
-      } catch (err) {
-        setError(new Error('Failed to fetch products'));
-      } finally {
-        setIsLoading(false);
+  const editProduct = async (updatedProduct: Product, callbacks?: ActionCallbacks) => {
+    const { onSuccess, onError } = callbacks || {};
+    try {
+      const productsCopy = [...mockProducts]; 
+      const index = productsCopy.findIndex((product) => product.id === updatedProduct.id);
+      if (index !== -1) {
+        productsCopy[index] = updatedProduct;
+        await mutate('products', productsCopy, false);
+        if (onSuccess) onSuccess();
       }
-    };
+    } catch (error) {
+      if (onError) onError(error as Error);
+    }
+  };
 
-    fetchProducts();
-  }, []);
+  const deleteProduct = async (id: string, callbacks?: ActionCallbacks) => {
+    const { onSuccess, onError } = callbacks || {};
+    try {
+      const index = mockProducts.findIndex((product) => product.id === id);
+      if (index !== -1) {
+        const productsCopy = [...mockProducts];
+        productsCopy.splice(index, 1);
+        await mutate('products', productsCopy, false);
+        if (onSuccess) onSuccess();
+      }
+    } catch (error) {
+      if (onError) onError(error as Error);
+    }
+  };
 
-  return { data, isLoading, error };
+  const getProduct = (id: string): Product | undefined => {
+    return products?.find((product) => product.id === id);
+  };
+
+  return { products, isLoading, error, addProduct, editProduct, deleteProduct, getProduct };
 };

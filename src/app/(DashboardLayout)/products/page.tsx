@@ -7,42 +7,38 @@ import {
 } from "@tabler/icons-react";
 
 import { Button } from '@mui/material';
-import ProductFormDrawer from "@/app/(DashboardLayout)/components/products/ProductFormDrawer";
-import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import Layout from '../components/shared/Layout';
 
 
 const SamplePage = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const router = useRouter();
   const handleAddProduct = () => {
-    setDrawerOpen(true);
-  };
-
-  const handleSubmit = () => {
-    setDrawerOpen(false);
+    router.push('/products/new');
   };
 
   return (
-    <PageContainer title="Produtos" description="this is Sample page">
-      <DashboardCard title="Produtos" action={
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          startIcon={<IconPlus />}
-          onClick={handleAddProduct}
-        >
-          Novo Produto
-        </Button>
-      }>
-        <ProductsList />        
-      </DashboardCard>
-      <ProductFormDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onSubmit={handleSubmit}
-      />
-
+    <PageContainer title="Gerenciamento de produtos" description="this is Sample page">
+      <Layout>
+        <Layout.Header>
+          <Layout.Title>Produtos</Layout.Title>
+        </Layout.Header>
+        <Layout.Container>
+        <DashboardCard title="Lista de gift cards" action={
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            startIcon={<IconPlus />}
+            onClick={handleAddProduct}
+          >
+            Novo gift card
+          </Button>
+        }>
+          <ProductsList />        
+        </DashboardCard>
+        </Layout.Container>
+      </Layout>
     </PageContainer>
   );
 };

@@ -24,8 +24,6 @@ interface Props {
   children: React.ReactNode;
 }
 
-
-
 export default function RootLayout({
   children,
 }: {
@@ -54,12 +52,7 @@ export default function RootLayout({
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
-        <Container
-          sx={{
-            paddingTop: "20px",
-            maxWidth: "1200px",
-          }}
-        >
+        <Box sx={{ padding: '0 40px' }}>
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
@@ -67,7 +60,7 @@ export default function RootLayout({
           {/* ------------------------------------------- */}
           {/* End Page */}
           {/* ------------------------------------------- */}
-        </Container>
+        </Box>
       </PageWrapper>
     </MainWrapper>
   );
