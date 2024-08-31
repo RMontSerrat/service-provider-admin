@@ -38,8 +38,8 @@ const OrderList = () => {
       type: 'dateTime',
       sortable: true,
       filterable: true,
-      valueGetter: (params) => new Date(params.value), // Converte a string ISO para um objeto Date
-      valueFormatter: (params) => dayjs(params.value).format('DD/MM/YYYY HH:mm'), // Formata a data
+      valueGetter: (params) => new Date((params as any).value), // Converte a string ISO para um objeto Date
+      valueFormatter: (params) => dayjs((params as any).value).format('DD/MM/YYYY HH:mm'), // Formata a data
     },
     { 
       field: 'code', 

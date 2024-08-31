@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Grid } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { productSchema } from '@/app/schemas';
 import { useDropzone } from 'react-dropzone';
 import Form from '../shared/Form';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useProducts } from './useProducts';
 import toast from 'react-hot-toast';
 
@@ -21,6 +21,8 @@ interface ProductFormProps {
     file: File | null;
   };
 }
+
+
 
 const formatCurrency = (val: string | number) => {
   if (!val) return 0;
@@ -43,14 +45,18 @@ const formatCurrency = (val: string | number) => {
 
 
 export default function ProductForm({ initialData }: ProductFormProps) {
-  const { addProduct, editProduct } = useProducts();
+  const { addProduct, editProduct, getProduct } = useProducts();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedImage, setSelectedImage] = useState<string | File | null>(initialData?.image || initialData?.file || null);
+
+  const cloneId = searchParams.get('clone');
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(productSchema),
@@ -63,6 +69,26 @@ export default function ProductForm({ initialData }: ProductFormProps) {
       file: initialData?.file || null,
     },
   });
+
+  useEffect(() => {
+    if (cloneId) {
+      const loadProductData = async () => {
+        const productToClone = await getProduct(cloneId);
+        if (productToClone) {
+          reset({
+            name: productToClone.name,
+            price: formatCurrency(productToClone.price),
+            description: productToClone.description,
+            image: productToClone.image,
+            file: null,
+          });
+          setSelectedImage(productToClone.image);
+        }
+      };
+      loadProductData();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cloneId]);
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -88,13 +114,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
   };
 
   const onSubmit = (data: any) => {
-
     const formattedData = {
       ...data,
       price: Number(data.price.replace('R$ ', '').replace(',', '.')),
     };
 
-    console.log(formattedData);
     if (initialData) {
       editProduct(formattedData, {
         onSuccess: () => {
@@ -116,8 +140,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
           toast.error('Ocorreu um erro ao adicionar o Gift Card');
           console.error(error);
         },
-      }
-      );
+      });
     }
   }
 
@@ -177,7 +200,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
           <Form.Description>Adicione uma imagem para o seu Gift Card:</Form.Description>
         </Form.Content>
         <Form.Content xs={9}>
-        <Grid container spacing={2}>
+          <Grid container spacing={2}>
             {predefinedGiftCards.map((url, index) => (
               <Grid item xs={predefinedGiftCards.length + 2} key={index}>
                 <Box
@@ -226,9 +249,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         </Button>
         <Button type="submit" variant="contained" color="primary">
           {isSubmitting ? 'Salvando...' : initialData ? 'Salvar Alterações' : 'Adicionar Gift Card'}
-          {/* {initialData ? 'Salvar Alterações' : 'Adicionar Gift Card'} */}
         </Button>
       </Box>
-      </Form>
+    </Form>
   );
-};
+}

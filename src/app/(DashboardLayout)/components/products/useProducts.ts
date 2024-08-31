@@ -6,6 +6,7 @@ export interface Product {
   image: string;
   description: string;
   price: number;
+  archived: boolean;
   file: File | null;
 }
 
@@ -22,6 +23,7 @@ const mockProducts: Product[] = [
     price: 29.99,
     description: 'Descrição do Produto 1. Este é um excelente produto com alta qualidade.',
     file: null,
+    archived: false,
   },
   {
     id: "2",
@@ -30,6 +32,7 @@ const mockProducts: Product[] = [
     price: 49.99,
     description: 'Descrição do Produto 2. Este produto é conhecido por sua durabilidade.',
     file: null,
+    archived: false,
   },
   {
     id: "3",
@@ -38,6 +41,7 @@ const mockProducts: Product[] = [
     price: 19.99,
     description: 'Descrição do Produto 3. Um produto acessível e de boa qualidade.',
     file: null,
+    archived: false,
   },
   {
     id: "4",
@@ -46,6 +50,7 @@ const mockProducts: Product[] = [
     price: 99.99,
     description: 'Descrição do Produto 4. Produto premium com as melhores características.',
     file: null,
+    archived: false,
   },
 ];
 
@@ -56,12 +61,12 @@ const fetchProducts = async (): Promise<Product[]> => {
 };
 
 export const useProducts = () => {
-  const { data: products, error } = useSWR<Product[]>('products', fetchProducts);
+  const { data, error } = useSWR<Product[]>('products', fetchProducts);
+  const products = data?.filter((product) => !product.archived);
 
   const isLoading = !products && !error;
 
   const addProduct = async (newProduct: Product, callbacks?: ActionCallbacks) => {
-    console.log('entrou add')
     const { onSuccess, onError } = callbacks || {};
     try {
       mockProducts.push(newProduct);
@@ -71,6 +76,24 @@ export const useProducts = () => {
       if (onError) onError(error as Error);
     }
   };
+
+  const archiveProduct = async (id: string, callbacks?: ActionCallbacks) => {
+    const { onSuccess, onError } = callbacks || {};
+    try {
+      const index = mockProducts.findIndex((product) => product.id === id);
+      if (index !== -1) {
+        const updatedProducts = mockProducts.map((product, idx) =>
+          idx === index ? { ...product, archived: true } : product
+        );
+  
+        await mutate('products', updatedProducts, false);
+  
+        if (onSuccess) onSuccess();
+      }
+    } catch (error) {
+      if (onError) onError(error as Error);
+    }
+  }
 
   const editProduct = async (updatedProduct: Product, callbacks?: ActionCallbacks) => {
     const { onSuccess, onError } = callbacks || {};
@@ -106,5 +129,5 @@ export const useProducts = () => {
     return products?.find((product) => product.id === id);
   };
 
-  return { products, isLoading, error, addProduct, editProduct, deleteProduct, getProduct };
+  return { products, isLoading, error, addProduct, editProduct, deleteProduct, getProduct, archiveProduct };
 };
