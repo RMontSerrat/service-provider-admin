@@ -61,6 +61,7 @@ export const useProducts = () => {
   const isLoading = !products && !error;
 
   const addProduct = async (newProduct: Product, callbacks?: ActionCallbacks) => {
+    console.log('entrou add')
     const { onSuccess, onError } = callbacks || {};
     try {
       mockProducts.push(newProduct);

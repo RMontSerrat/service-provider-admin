@@ -1,9 +1,18 @@
 import React from 'react';
-import { Container, Grid, Button, Card, CardContent, Typography, Divider, TextField, Box } from '@mui/material';
+import { Grid, Button, Card, CardContent, Typography, Divider, TextField, Box } from '@mui/material';
 import GiftCardOrderDetails from './GiftCardOrderDetails';
 
-// Componente para os detalhes do Pedido
-const OrderDetails = ({ orderId, placedDate, paymentMethod, paymentReference, promotions, items }) => {
+
+interface OrderDetailsProps {
+  orderId: string;
+  placedDate: string;
+  paymentMethod: string;
+  paymentReference: string;
+  promotions: string;
+  items: { name: string; price: number }[];
+}
+
+const OrderDetails = ({ orderId, placedDate, paymentMethod, paymentReference, promotions, items }: OrderDetailsProps) => {
   return (
     <Card sx={{ mb: 2 }}>
       <CardContent>

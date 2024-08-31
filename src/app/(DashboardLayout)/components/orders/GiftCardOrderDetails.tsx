@@ -1,7 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Chip } from '@mui/material';
 
-const GiftCardOrderDetails = ({ status, code, balance, expires, purchaser, recipient, message, image }) => {
+
+interface GiftCardOrderDetailsProps {
+  status: string;
+  code: string;
+  balance: string;
+  expires: string;
+  purchaser: string;
+  recipient: string;
+  message: string;
+  image: string;
+}
+
+const GiftCardOrderDetails = ({ status, code, balance, expires, purchaser, recipient, message, image }: GiftCardOrderDetailsProps) => {
   return (
     <Card sx={{ mb: 2 }}>
       <img
