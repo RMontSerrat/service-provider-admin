@@ -14,12 +14,11 @@ export interface ActionCallbacks {
   onError?: (error: Error) => void;
 }
 
-// Simulando uma API fake com produtos mockados
 const mockProducts: Product[] = [
   {
     id: "1",
     name: 'Produto 1',
-    image: 'https://picsum.photos/seed/p1/100/100',
+    image: 'https://cdn.giftup.app/web-assets/voucher-templates/15075ece-3241-4653-81d2-a11f748ab52c.png',
     price: 29.99,
     description: 'Descrição do Produto 1. Este é um excelente produto com alta qualidade.',
     file: null,
@@ -27,7 +26,7 @@ const mockProducts: Product[] = [
   {
     id: "2",
     name: 'Produto 2',
-    image: 'https://picsum.photos/seed/p2/100/100',
+    image: 'https://cdn.giftup.app/web-assets/voucher-templates/071a8a5b-3bf1-4422-a130-dfd19a5a1a9b.png',
     price: 49.99,
     description: 'Descrição do Produto 2. Este produto é conhecido por sua durabilidade.',
     file: null,
@@ -35,7 +34,7 @@ const mockProducts: Product[] = [
   {
     id: "3",
     name: 'Produto 3',
-    image: 'https://picsum.photos/seed/p3/100/100',
+    image: 'https://cdn.giftup.app/web-assets/voucher-templates/15075ece-3241-4653-81d2-a11f748ab52c.png',
     price: 19.99,
     description: 'Descrição do Produto 3. Um produto acessível e de boa qualidade.',
     file: null,
@@ -43,7 +42,7 @@ const mockProducts: Product[] = [
   {
     id: "4",
     name: 'Produto 4',
-    image: 'https://picsum.photos/seed/p4/100/100',
+    image: 'https://cdn.giftup.app/web-assets/voucher-templates/071a8a5b-3bf1-4422-a130-dfd19a5a1a9b.png',
     price: 99.99,
     description: 'Descrição do Produto 4. Produto premium com as melhores características.',
     file: null,

@@ -1,7 +1,6 @@
 'use client';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import ProductsList from '@/app/(DashboardLayout)/components/products/ProductsList';
 import {
   IconPlus,
 } from "@tabler/icons-react";
@@ -9,6 +8,7 @@ import {
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Layout from '../components/shared/Layout';
+import OrderList from '../components/orders/OrderList';
 
 
 const SamplePage = () => {
@@ -18,13 +18,13 @@ const SamplePage = () => {
   };
 
   return (
-    <PageContainer title="Gerenciamento de produtos" description="this is Sample page">
+    <PageContainer title="Lista de pedidos" description="this is Sample page">
       <Layout>
         <Layout.Header>
-          <Layout.Title>Itens a venda</Layout.Title>
+          <Layout.Title>Pedidos</Layout.Title>
         </Layout.Header>
         <Layout.Container>
-        <DashboardCard title="Lista de gift cards" action={
+        <DashboardCard title="Lista de pedidos" action={
           <Button
             variant="contained"
             color="primary"
@@ -35,7 +35,7 @@ const SamplePage = () => {
             Novo gift card
           </Button>
         }>
-          <ProductsList />        
+          <OrderList />
         </DashboardCard>
         </Layout.Container>
       </Layout>

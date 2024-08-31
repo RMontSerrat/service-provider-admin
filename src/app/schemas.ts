@@ -8,8 +8,8 @@ export const productSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "Nome é obrigatório"),
   image: z.union([
-    z.string().url("URL da imagem inválida"), // Aceita URL da imagem como string
-    fileSchema, // Valida como um objeto File, se File estiver disponível
+    z.string().url("URL da imagem inválida"),
+    fileSchema,
   ]),
   price: z.string().min(1, "Preço é obrigatório"),
   description: z.string().min(5, "Descrição é obrigatória"),

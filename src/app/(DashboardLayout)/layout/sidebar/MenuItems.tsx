@@ -6,6 +6,7 @@ import {
   IconMoodHappy,
   IconTypography,
   IconUserPlus,
+  IconBuildingStore,
   IconGiftCard,
 } from "@tabler/icons-react";
 
@@ -24,9 +25,15 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Produtos",
-    icon: IconGiftCard,
+    title: "Itens a venda",
+    icon: IconBuildingStore,
     href: "/products",
+  },
+  {
+    id: uniqueId(),
+    title: "Pedidos",
+    icon: IconGiftCard,
+    href: "/orders",
   },
   // {
   //   navlabel: true,
